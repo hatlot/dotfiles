@@ -1,0 +1,14 @@
+build-essential
+git
+bash-completion
+less
+man-db
+manpages
+manpages-ja
+sl
+lolcat
+curl
+wget
+zsh
+zsh-autosuggestions
+zsh-syntax-highlighting
