@@ -26,14 +26,6 @@ setopt hist_ignore_dups   # 直前と同じコマンドは記録しない
 setopt hist_ignore_all_dups # 重複する古い履歴を削除
 
 # プラグインの読み込み
-# シンタックスハイライト (コマンドの色付け)
-if [ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-# Arch Linuxの場合
-    source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-# Debian/Ubuntuの場合
-elif [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-    source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-fi
 
 # オートサジェスト (入力予測)
 if [ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
@@ -43,6 +35,16 @@ if [ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]; th
 elif [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
     source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
+
+# シンタックスハイライト (コマンドの色付け)
+if [ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+# Arch Linuxの場合
+    source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# Debian/Ubuntuの場合
+elif [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+    source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
+
 # 予測文字の色を少し見やすくする
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=60'
 

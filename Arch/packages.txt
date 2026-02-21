@@ -24,6 +24,5 @@ yay-debug
 yazi
 zellij
 zsh
-zsh-autocomplete
 zsh-autosuggestions
 zsh-syntax-highlighting
