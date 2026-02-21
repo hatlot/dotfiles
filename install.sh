@@ -3,16 +3,37 @@
 # エラーでスクリプトを終了する
 set -e
 
-echo "Installing dotfiles..."
+echo "dotfilesのインストールを開始..."
 
 # 必要なパッケージをインストール
-echo "Updating package list and installing packages from pkglist.txt..."
-sudo pacman -Syu --needed - < pkglist.txt
+if command -v pacman &> /dev/null; then
 
-mkdir -p "$HOME/.config"
+    if [ -f "$HOME/dotfiles/Arch/packages.txt" ]; then
+        echo "pacmanでパッケージをインストール..."
+        sudo pacman -Syu --needed - < "$HOME/dotfiles/Arch/packages.txt"
+    fi
+
+elif command -v apt &> /dev/null; then
+
+    sudo apt update
+    if [ -f "$HOME/dotfiles/Debian/packages.txt" ]; then
+        echo "aptでパッケージをインストール..."
+        xargs -a "$HOME/dotfiles/Debian/packages.txt" sudo apt install -y
+    fi
+
+    if ! command -v starship &> /dev/null; then
+        echo "starshipをインストール..."
+        curl -sS https://starship.rs/install.sh | sh -s -- -y
+    fi
+
+else
+    echo "対応していないパッケージマネージャーです。pacmanまたはaptを使用してください。"
+    exit 1
+fi
 
 # シンボリックリンクの作成
 echo "Creating symbolic links for dotfiles..."
+mkdir -p "$HOME/.config"
 DOT_FILES=(
     .bashrc
     .zshrc

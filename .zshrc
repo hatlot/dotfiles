@@ -44,5 +44,5 @@ alias la='ls -a'
 alias ll='ls -la'
 
 if [ -f /etc/arch-release ]; then
-    source ~/dotfiles/.aliases_arch
+    source ~/dotfiles/Arch/.aliases_arch
 fi

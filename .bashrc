@@ -13,5 +13,5 @@ alias ll='ls -la'
 export LANG=ja_JP.UTF-8
 
 if [ -f /etc/arch-release ]; then
-    source ~/dotfiles/.aliases_arch
+    source ~/dotfiles/Arch/.aliases_arch
 fi
