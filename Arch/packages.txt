@@ -12,13 +12,13 @@ less
 lolcat
 man-db
 man-pages
-man-pages-ja
 openssh
 reflector
 rustup
 sl
 starship
 sudo
+tree
 yay
 yay-debug
 yazi
