@@ -7,10 +7,19 @@ echo "dotfilesのインストールを開始..."
 
 # 必要なパッケージをインストール
 if command -v pacman &> /dev/null; then
+    echo "pacmanを使用してパッケージをインストール..."
+    if ! command -v yay &> /dev/null; then
+        sudo pacman -S --needed --noconfirm git base-devel
+        echo "yayをインストール..."
+        git clone https://aur.archlinux.org/yay.git /tmp/yay
+        (cd /tmp/yay && makepkg -si --noconfirm)
+        rm -rf /tmp/yay
+        echo "yayのインストールが完了しました。"
+    fi
 
     if [ -f "$HOME/dotfiles/Arch/packages.txt" ]; then
-        echo "pacmanでパッケージをインストール..."
-        sudo pacman -Syu --needed - < "$HOME/dotfiles/Arch/packages.txt"
+        echo "yayでパッケージをインストール..."
+        yay -S --needed - < "$HOME/dotfiles/Arch/packages.txt"
     fi
 
 elif command -v apt &> /dev/null; then
