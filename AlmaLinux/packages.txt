@@ -1,0 +1,9 @@
+git
+bash-completion
+tree
+less
+man-db
+man-pages
+zsh
+util-linux-user
+epel-release
