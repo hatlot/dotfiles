@@ -1,0 +1,159 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+[](color_blue1)\
+$os\
+$username\
+[](fg:color_blue1 bg:color_blue2)\
+$directory\
+[](fg:color_blue2 bg:color_blue3)\
+$git_branch\
+$git_status\
+[](fg:color_blue3 bg:color_blue4)\
+$c\
+$cpp\
+$rust\
+$nodejs\
+$php\
+$java\
+$kotlin\
+$python\
+[](fg:color_blue4 bg:color_blue5)\
+$docker_context\
+[](fg:color_blue5 bg:color_black)\
+$time\
+[ ](fg:color_black)\
+$line_break$character"""
+
+palette = 'my_color'
+
+[palettes.my_color]
+color_white = '#FFFFFF'
+color_black = '#3c3836'
+color_gray = '#665c54'
+color_blue1 = '#001A33'
+color_blue2 = '#003366'
+color_blue3 = '#004C99'
+color_blue4 = '#0066CC'
+color_blue5 = '#0080FF'
+color_aqua = '#28b1ae'
+color_green = '#11a523'
+color_orange = '#d47230'
+color_purple = '#7040ab'
+color_red = '#cc241d'
+color_yellow = '#d7b321'
+
+[os]
+disabled = false
+style = "bg:color_blue1 fg:color_white"
+
+[os.symbols]
+Windows = "󰍲"
+Ubuntu = "󰕈"
+SUSE = ""
+Raspbian = "󰐿"
+Mint = "󰣭"
+Macos = "󰀵"
+Manjaro = ""
+Linux = "󰌽"
+Gentoo = "󰣨"
+Fedora = "󰣛"
+Alpine = ""
+Amazon = ""
+Android = ""
+AOSC = ""
+Arch = ""
+Artix = "󰣇"
+EndeavourOS = ""
+CentOS = ""
+Debian = "󰣚"
+Redhat = "󱄛"
+RedHatEnterprise = "󱄛"
+Pop = ""
+
+[username]
+show_always = true
+style_user = "bg:color_blue1 fg:color_white"
+style_root = "bg:color_blue1 fg:color_red"
+format = '[ $user ]($style)'
+
+[directory]
+style = "fg:color_white bg:color_blue2"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = "󰝚 "
+"Pictures" = " "
+"Developer" = "󰲋 "
+
+[git_branch]
+symbol = ""
+style = "bg:color_blue3"
+format = '[[ $symbol $branch ](fg:color_white bg:color_blue3)]($style)'
+
+[git_status]
+style = "bg:color_blue3"
+format = '[[($all_status$ahead_behind )](fg:color_white bg:color_blue3)]($style)'
+
+[nodejs]
+symbol = ""
+style = "bg:color_blue4"
+format = '[[ $symbol( $version) ](fg:color_white bg:color_blue4)]($style)'
+
+[c]
+symbol = " "
+style = "bg:color_blue4"
+format = '[[ $symbol( $version) ](fg:color_white bg:color_blue4)]($style)'
+
+[cpp]
+symbol = " "
+style = "bg:color_blue4"
+format = '[[ $symbol( $version) ](fg:color_white bg:color_blue4)]($style)'
+
+[rust]
+symbol = ""
+style = "bg:color_blue4"
+format = '[[ $symbol( $version) ](fg:color_white bg:color_blue4)]($style)'
+
+[php]
+symbol = ""
+style = "bg:color_blue4"
+format = '[[ $symbol( $version) ](fg:color_white bg:color_blue4)]($style)'
+
+[java]
+symbol = ""
+style = "bg:color_blue4"
+format = '[[ $symbol( $version) ](fg:color_white bg:color_blue4)]($style)'
+
+[kotlin]
+symbol = ""
+style = "bg:color_blue4"
+format = '[[ $symbol( $version) ](fg:color_white bg:color_blue4)]($style)'
+
+[python]
+symbol = ""
+style = "bg:color_blue4"
+format = '[[ $symbol( $version) ](fg:color_white bg:color_blue4)]($style)'
+
+[docker_context]
+symbol = ""
+style = "bg:color_blue5"
+format = '[[ $symbol( $context) ](fg:color_white bg:color_blue5)]($style)'
+
+[time]
+disabled = false
+time_format = "%R"
+style = "bg:color_black"
+format = '[[ ⌚ $time ](fg:color_white bg:color_black)]($style)'
+
+[line_break]
+disabled = false
+
+[character]
+disabled = false
+success_symbol = '[\$](bold fg:color_green)'
+error_symbol = '[\$](bold fg:color_red)'
