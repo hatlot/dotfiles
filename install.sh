@@ -42,6 +42,7 @@ elif command -v apt &> /dev/null; then
 elif command -v dnf &> /dev/null; then
 
     sudo dnf check-update || true
+    sudo dnf install epel-release -y
     if [ -f "$HOME/dotfiles/AlmaLinux/packages.txt" ]; then
         echo "dnfでパッケージをインストール..."
         xargs -a "$HOME/dotfiles/AlmaLinux/packages.txt" sudo dnf install -y
@@ -53,10 +54,26 @@ elif command -v dnf &> /dev/null; then
     fi
     STARSHIP_SRC="$HOME/dotfiles/.config/starship_alma.toml"
 
+    # Zshプラグインのインストール
+    echo "Installing Zsh plugins..."
+    ZSH_PLUGIN_DIR="$HOME/.zsh"
+    mkdir -p "$ZSH_PLUGIN_DIR"
+
+    if [ ! -d "$ZSH_PLUGIN_DIR/zsh-autosuggestions" ]; then
+        echo "zsh-autosuggestionsをクローンしています..."
+        git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_PLUGIN_DIR/zsh-autosuggestions"
+    fi
+
+    if [ ! -d "$ZSH_PLUGIN_DIR/zsh-syntax-highlighting" ]; then
+        echo "zsh-syntax-highlightingをクローンしています..."
+        git clone https://github.com/zsh-users/zsh-syntax-highlighting "$ZSH_PLUGIN_DIR/zsh-syntax-highlighting"
+    fi
+
 else
     echo "対応していないパッケージマネージャーです。"
     exit 1
 fi
+
 
 # シンボリックリンクの作成
 echo "Creating symbolic links for dotfiles..."
