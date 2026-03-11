@@ -27,6 +27,7 @@ diffutils
 dmidecode
 dpkg
 e2fsprogs
+fastfetch
 fdisk
 findutils
 gcc-14-base
