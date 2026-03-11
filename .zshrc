@@ -58,6 +58,8 @@ if [ -f /etc/arch-release ]; then
     source ~/dotfiles/Arch/.aliases_arch
 elif [ -f /etc/debian_version ]; then
     source ~/dotfiles/Debian/.aliases_debian
+elif [ -f /etc/redhat-release ]; then
+    source ~/dotfiles/AlmaLinux/.aliases_alma
 fi
 
 # Starshipの起動 (プロンプトの見た目)

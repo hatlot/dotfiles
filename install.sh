@@ -39,8 +39,22 @@ elif command -v apt &> /dev/null; then
     fi
     STARSHIP_SRC="$HOME/dotfiles/.config/starship_debian.toml"
 
+elif command -v dnf &> /dev/null; then
+
+    sudo dnf check-update || true
+    if [ -f "$HOME/dotfiles/AlmaLinux/packages.txt" ]; then
+        echo "dnfでパッケージをインストール..."
+        xargs -a "$HOME/dotfiles/AlmaLinux/packages.txt" sudo dnf install -y
+    fi
+
+    if ! command -v starship &> /dev/null; then
+        echo "starshipをインストール..."
+        curl -sS https://starship.rs/install.sh | sh -s -- -y
+    fi
+    STARSHIP_SRC="$HOME/dotfiles/.config/starship_alma.toml"
+
 else
-    echo "対応していないパッケージマネージャーです。pacmanまたはaptを使用してください。"
+    echo "対応していないパッケージマネージャーです。"
     exit 1
 fi
 

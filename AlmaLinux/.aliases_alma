@@ -1,0 +1,3 @@
+alias update='sudo dnf update'
+alias install='sudo dnf install'
+alias savepkg='dnf repoquery --userinstalled --qf "%{name}" > ~/dotfiles/AlmaLinux/packages.txt'
