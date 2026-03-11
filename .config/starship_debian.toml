@@ -156,4 +156,4 @@ disabled = false
 [character]
 disabled = false
 success_symbol = '[\$](bold fg:color_green)'
-error_symbol = '[\$](bold fg:color_yellow)'
+error_symbol = '[\$](bold fg:color_red)'
