@@ -12,6 +12,8 @@ less
 lolcat
 man-db
 man-pages
+nano
+noto-fonts-cjk
 openssh
 reflector
 rustup
@@ -19,8 +21,10 @@ sl
 starship
 sudo
 tree
+ttf-jetbrains-mono-nerd
+vim
+wget
 yay
-yay-debug
 yazi
 zellij
 zsh
