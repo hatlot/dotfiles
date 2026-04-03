@@ -1,3 +1,2 @@
-alias update='sudo pacman -Syu'
-alias install='sudo pacman -S'
-alias savepkg='pacman -Qeq > ~/dotfiles/Arch/packages.txt'
+alias update='yay -Syu'
+alias install='yay -S'
