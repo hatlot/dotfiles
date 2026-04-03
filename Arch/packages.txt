@@ -1,6 +1,7 @@
 base
 base-devel
 bash-completion
+curl
 fastfetch
 git
 less
@@ -15,8 +16,10 @@ starship
 sudo
 tree
 ttf-jetbrains-mono-nerd
+unzip
 wget
 yay
+zip
 zsh
 zsh-autosuggestions
 zsh-syntax-highlighting
