@@ -71,3 +71,6 @@ fi
 
 # Starshipの起動 (プロンプトの見た目)
 eval "$(starship init zsh)"
+
+# ローカルの設定ファイルがあれば読み込む
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local

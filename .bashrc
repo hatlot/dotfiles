@@ -15,3 +15,5 @@ export LANG=ja_JP.UTF-8
 if [ -f /etc/arch-release ]; then
     source ~/dotfiles/Arch/.aliases_arch
 fi
+
+[[ -f ~/.bashrc.local ]] && source ~/.bashrc.local
