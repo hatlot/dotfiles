@@ -5,13 +5,9 @@ curl
 fastfetch
 git
 less
-man-db
-man-pages
 nano
 noto-fonts-cjk
 openssh
-reflector
-rustup
 starship
 sudo
 tree
