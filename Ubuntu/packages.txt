@@ -1,4 +1,4 @@
-fastfetch
+neofetch
 zsh
 zsh-autosuggestions
 zsh-syntax-highlighting

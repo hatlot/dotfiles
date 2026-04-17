@@ -28,17 +28,32 @@ if command -v pacman &> /dev/null; then
 elif command -v apt &> /dev/null; then
 
     sudo apt update
-    if [ -f "$HOME/dotfiles/Debian/packages.txt" ]; then
+    . /etc/os-release
+    if [[ "$ID" == "debian" ]]; then
+        if [ -f "$HOME/dotfiles/Debian/packages.txt" ]; then
         echo "aptでパッケージをインストール..."
         xargs -a "$HOME/dotfiles/Debian/packages.txt" sudo apt install -y
-    fi
+        fi
 
-    if ! command -v starship &> /dev/null; then
-        echo "starshipをインストール..."
-        curl -sS https://starship.rs/install.sh | sh -s -- -y
+        if ! command -v starship &> /dev/null; then
+            echo "starshipをインストール..."
+            curl -sS https://starship.rs/install.sh | sh -s -- -y
+        fi
+        STARSHIP_SRC="$HOME/dotfiles/.config/starship_debian.toml"
     fi
-    STARSHIP_SRC="$HOME/dotfiles/.config/starship_debian.toml"
+    if [[ "$ID" == "ubuntu" ]]; then
+        if [ -f "$HOME/dotfiles/Ubuntu/packages.txt" ]; then
+        echo "aptでパッケージをインストール..."
+        xargs -a "$HOME/dotfiles/Ubuntu/packages.txt" sudo apt install -y
+        fi
 
+        if ! command -v starship &> /dev/null; then
+            echo "starshipをインストール..."
+            curl -sS https://starship.rs/install.sh | sh -s -- -y
+        fi
+        STARSHIP_SRC="$HOME/dotfiles/.config/starship_ubuntu.toml"
+    fi
+    
 elif command -v dnf &> /dev/null; then
 
     sudo dnf check-update || true
