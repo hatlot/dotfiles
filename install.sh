@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# エラーでスクリプトを終了する
+# Exit script on error
 set -euo pipefail
 
 log() {
@@ -15,89 +15,89 @@ error() {
 }
 
 if [[ $EUID -eq 0 ]]; then
-    error "このスクリプトはrootユーザーで実行しないでください。"
+    error "This script should not be run as root user."
 fi
 
-log "dotfilesのインストールを開始..."
+log "Starting dotfiles installation..."
 
 STARSHIP_SRC=""
 
 # 必要なパッケージをインストール
 if command -v pacman &> /dev/null; then
-    log "pacmanを使用してパッケージをインストール..."
+    log "Installing packages using pacman..."
 
     if ! command -v yay &> /dev/null; then
         sudo pacman -S --needed --noconfirm git base-devel
 
-        log "yayをインストール..."
+        log "Installing yay..."
         TEMP_DIR=$(mktemp -d)
         trap '[[ -n "$TEMP_DIR" && -d "$TEMP_DIR" ]] && rm -rf "$TEMP_DIR"' EXIT
 
         git clone https://aur.archlinux.org/yay.git "$TEMP_DIR/yay"
         (cd "$TEMP_DIR/yay" && makepkg -si --noconfirm)
-        log "yayのインストールが完了しました。"
+        log "Yay installation completed."
     fi
 
     if [ -f "$HOME/dotfiles/archlinux/packages.txt" ]; then
-        log "yayでパッケージをインストール..."
+        log "Installing packages with yay..."
         yay -S --needed - < "$HOME/dotfiles/archlinux/packages.txt"
     fi
     STARSHIP_SRC="$HOME/dotfiles/config/starship/starship_arch.toml"
 
 elif command -v apt &> /dev/null; then
-    log "aptを使用してパッケージをインストール..."
+    log "Installing packages using apt..."
     sudo apt update
     source /etc/os-release
     if [[ "$ID" == "debian" || "$ID" == "ubuntu" ]]; then
         if [ -f "$HOME/dotfiles/$ID/packages.txt" ]; then
-            log "aptでパッケージをインストール..."
+            log "Installing packages with apt..."
             xargs -a "$HOME/dotfiles/$ID/packages.txt" sudo apt install -y
         fi
 
         if ! command -v starship &> /dev/null; then
-            log "starshipをインストール..."
+            log "Installing starship..."
             curl -sS https://starship.rs/install.sh | sh -s -- -y
         fi
         STARSHIP_SRC="$HOME/dotfiles/config/starship/starship_$ID.toml"
     fi
     
 elif command -v dnf &> /dev/null; then
-    log "dnfを使用してパッケージをインストール..."
+    log "Installing packages using dnf..."
     sudo dnf check-update || true
     sudo dnf install epel-release -y
     if [ -f "$HOME/dotfiles/almalinux/packages.txt" ]; then
-        log "dnfでパッケージをインストール..."
+        log "Installing packages with dnf..."
         xargs -a "$HOME/dotfiles/almalinux/packages.txt" sudo dnf install -y
     fi
 
     if ! command -v starship &> /dev/null; then
-        log "starshipをインストール..."
+        log "Installing starship..."
         curl -sS https://starship.rs/install.sh | sh -s -- -y
     fi
     STARSHIP_SRC="$HOME/dotfiles/config/starship/starship_alma.toml"
 
-    # Zshプラグインのインストール
-    log "Zshプラグインをインストール..."
+    # Installing Zsh plugins
+    log "Installing Zsh plugins..."
     ZSH_PLUGIN_DIR="$HOME/.zsh"
     mkdir -p "$ZSH_PLUGIN_DIR"
 
     if [ ! -d "$ZSH_PLUGIN_DIR/zsh-autosuggestions" ]; then
-        log "zsh-autosuggestionsをクローンしています..."
+        log "Cloning zsh-autosuggestions..."
         git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_PLUGIN_DIR/zsh-autosuggestions"
     fi
 
     if [ ! -d "$ZSH_PLUGIN_DIR/zsh-syntax-highlighting" ]; then
-        log "zsh-syntax-highlightingをクローンしています..."
+        log "Cloning zsh-syntax-highlighting..."
         git clone https://github.com/zsh-users/zsh-syntax-highlighting "$ZSH_PLUGIN_DIR/zsh-syntax-highlighting"
     fi
 
 else
-    error "対応していないパッケージマネージャーです。"
+    error "Unsupported package manager."
 fi
 
 
-# シンボリックリンクの作成
-log "dotfilesのシンボリックリンクを作成..."
+# Creating symbolic links for dotfiles
+log "Creating dotfiles symbolic links..."
 mkdir -p "$HOME/.config"
 DOT_FILES=(
     .bashrc
@@ -110,7 +110,7 @@ done
 if [ -f "$STARSHIP_SRC" ]; then
     ln -sfv "$STARSHIP_SRC" "$HOME/.config/starship.toml"
 else
-    warn "$STARSHIP_SRCが見つかりませんでした。"
+    warn "$STARSHIP_SRC not found."
 fi
 
 log "Dotfiles installation complete!"
