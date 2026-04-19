@@ -4,13 +4,13 @@
 set -euo pipefail
 
 log() {
-    echo "[INFO] $*"
+    echo -e "\e[32m[INFO]\e[0m $*"
 }
 warn() {
-    echo "[WARN] $*"
+    echo -e "\e[33m[WARN]\e[0m $*"
 }
 error() {
-    echo "[ERROR] $*" >&2
+    echo -e "\e[31m[ERROR]\e[0m $*" >&2
     exit 1
 }
 
@@ -31,7 +31,7 @@ if command -v pacman &> /dev/null; then
 
         log "Installing yay..."
         TEMP_DIR=$(mktemp -d)
-        trap '[[ -n "$TEMP_DIR" && -d "$TEMP_DIR" ]] && rm -rf "$TEMP_DIR"' EXIT
+        trap '[[ -n "${TEMP_DIR:-}" && -d "$TEMP_DIR" ]] && rm -rf -- "$TEMP_DIR"' EXIT
 
         git clone https://aur.archlinux.org/yay.git "$TEMP_DIR/yay"
         (cd "$TEMP_DIR/yay" && makepkg -si --noconfirm)
@@ -45,7 +45,7 @@ if command -v pacman &> /dev/null; then
     STARSHIP_SRC="$HOME/dotfiles/config/starship/starship_arch.toml"
 
 elif command -v apt &> /dev/null; then
-    log "Installing packages using apt..."
+    log "Updating package list..."
     sudo apt update
     source /etc/os-release
     if [[ "$ID" == "debian" || "$ID" == "ubuntu" ]]; then
@@ -62,7 +62,6 @@ elif command -v apt &> /dev/null; then
     fi
     
 elif command -v dnf &> /dev/null; then
-    log "Installing packages using dnf..."
     sudo dnf check-update || true
     sudo dnf install epel-release -y
     if [ -f "$HOME/dotfiles/almalinux/packages.txt" ]; then
