@@ -25,8 +25,6 @@ setopt share_history      # 複数のターミナルで履歴を共有
 setopt hist_ignore_dups   # 直前と同じコマンドは記録しない
 setopt hist_ignore_all_dups # 重複する古い履歴を削除
 
-# プラグインの読み込み
-
 # オートサジェスト (入力予測)
 # Arch Linuxの場合
 if [ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
@@ -37,19 +35,6 @@ elif [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
 # その他の環境の場合 (ユーザーローカルにインストールしている場合など)
 elif [ -f ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
     source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
-fi
-
-
-# シンタックスハイライト (コマンドの色付け)
-# Arch Linuxの場合
-if [ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-    source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-# Debian/Ubuntuの場合
-elif [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-    source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-# その他の環境の場合 (ユーザーローカルにインストールしている場合など)
-elif [ -f ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-    source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
 
 # 予測文字の色を少し見やすくする
@@ -73,6 +58,18 @@ fi
 
 # Starshipの起動 (プロンプトの見た目)
 eval "$(starship init zsh)"
+
+# シンタックスハイライト (コマンドの色付け)
+# Arch Linuxの場合
+if [ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+    source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# Debian/Ubuntuの場合
+elif [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+    source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# その他の環境の場合 (ユーザーローカルにインストールしている場合など)
+elif [ -f ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+    source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
 
 # ローカルの設定ファイルがあれば読み込む
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
