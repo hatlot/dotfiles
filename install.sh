@@ -19,9 +19,9 @@ if command -v pacman &> /dev/null; then
         echo "yayのインストールが完了しました。"
     fi
 
-    if [ -f "$HOME/dotfiles/Arch/packages.txt" ]; then
+    if [ -f "$HOME/dotfiles/archlinux/packages.txt" ]; then
         echo "yayでパッケージをインストール..."
-        yay -S --needed - < "$HOME/dotfiles/Arch/packages.txt"
+        yay -S --needed - < "$HOME/dotfiles/archlinux/packages.txt"
     fi
     STARSHIP_SRC="$HOME/dotfiles/.config/starship_arch.toml"
 
@@ -29,38 +29,26 @@ elif command -v apt &> /dev/null; then
 
     sudo apt update
     . /etc/os-release
-    if [[ "$ID" == "debian" ]]; then
-        if [ -f "$HOME/dotfiles/Debian/packages.txt" ]; then
+    if [[ "$ID" == "debian" || "$ID" == "ubuntu" ]]; then
+        if [ -f "$HOME/dotfiles/$ID/packages.txt" ]; then
         echo "aptでパッケージをインストール..."
-        xargs -a "$HOME/dotfiles/Debian/packages.txt" sudo apt install -y
+        xargs -a "$HOME/dotfiles/$ID/packages.txt" sudo apt install -y
         fi
 
         if ! command -v starship &> /dev/null; then
             echo "starshipをインストール..."
             curl -sS https://starship.rs/install.sh | sh -s -- -y
         fi
-        STARSHIP_SRC="$HOME/dotfiles/.config/starship_debian.toml"
-    fi
-    if [[ "$ID" == "ubuntu" ]]; then
-        if [ -f "$HOME/dotfiles/Ubuntu/packages.txt" ]; then
-        echo "aptでパッケージをインストール..."
-        xargs -a "$HOME/dotfiles/Ubuntu/packages.txt" sudo apt install -y
-        fi
-
-        if ! command -v starship &> /dev/null; then
-            echo "starshipをインストール..."
-            curl -sS https://starship.rs/install.sh | sh -s -- -y
-        fi
-        STARSHIP_SRC="$HOME/dotfiles/.config/starship_ubuntu.toml"
+        STARSHIP_SRC="$HOME/dotfiles/.config/starship_$ID.toml"
     fi
     
 elif command -v dnf &> /dev/null; then
 
     sudo dnf check-update || true
     sudo dnf install epel-release -y
-    if [ -f "$HOME/dotfiles/AlmaLinux/packages.txt" ]; then
+    if [ -f "$HOME/dotfiles/almalinux/packages.txt" ]; then
         echo "dnfでパッケージをインストール..."
-        xargs -a "$HOME/dotfiles/AlmaLinux/packages.txt" sudo dnf install -y
+        xargs -a "$HOME/dotfiles/almalinux/packages.txt" sudo dnf install -y
     fi
 
     if ! command -v starship &> /dev/null; then

@@ -47,13 +47,13 @@ alias la='ls -a'
 alias ll='ls -la'
 
 if [ -f /etc/arch-release ]; then
-    source ~/dotfiles/Arch/.aliases_arch
+    source ~/dotfiles/archlinux/.aliases_arch
 elif [ -f /etc/ubuntu_advantage ]; then
-    source ~/dotfiles/Ubuntu/.aliases_ubuntu
+    source ~/dotfiles/ubuntu/.aliases_ubuntu
 elif [ -f /etc/debian_version ]; then
-    source ~/dotfiles/Debian/.aliases_debian
+    source ~/dotfiles/debian/.aliases_debian
 elif [ -f /etc/redhat-release ]; then
-    source ~/dotfiles/AlmaLinux/.aliases_alma
+    source ~/dotfiles/almalinux/.aliases_alma
 fi
 
 # Starshipの起動 (プロンプトの見た目)
