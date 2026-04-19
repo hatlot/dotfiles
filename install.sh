@@ -42,7 +42,7 @@ if command -v pacman &> /dev/null; then
         log "yayでパッケージをインストール..."
         yay -S --needed - < "$HOME/dotfiles/archlinux/packages.txt"
     fi
-    STARSHIP_SRC="$HOME/dotfiles/.config/starship_arch.toml"
+    STARSHIP_SRC="$HOME/dotfiles/config/starship/starship_arch.toml"
 
 elif command -v apt &> /dev/null; then
     log "aptを使用してパッケージをインストール..."
@@ -58,7 +58,7 @@ elif command -v apt &> /dev/null; then
             log "starshipをインストール..."
             curl -sS https://starship.rs/install.sh | sh -s -- -y
         fi
-        STARSHIP_SRC="$HOME/dotfiles/.config/starship_$ID.toml"
+        STARSHIP_SRC="$HOME/dotfiles/config/starship/starship_$ID.toml"
     fi
     
 elif command -v dnf &> /dev/null; then
@@ -74,7 +74,7 @@ elif command -v dnf &> /dev/null; then
         log "starshipをインストール..."
         curl -sS https://starship.rs/install.sh | sh -s -- -y
     fi
-    STARSHIP_SRC="$HOME/dotfiles/.config/starship_alma.toml"
+    STARSHIP_SRC="$HOME/dotfiles/config/starship/starship_alma.toml"
 
     # Zshプラグインのインストール
     log "Zshプラグインをインストール..."
