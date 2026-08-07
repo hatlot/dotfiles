@@ -100,6 +100,7 @@ log "Creating dotfiles symbolic links..."
 mkdir -p "$HOME/.config"
 DOT_FILES=(
     .bashrc
+    .vimrc
     .zshrc
 )
 for file in "${DOT_FILES[@]}"; do
