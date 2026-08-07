@@ -6,12 +6,26 @@ set -euo pipefail
 log() {
     echo -e "\e[32m[INFO]\e[0m $*"
 }
+
 warn() {
     echo -e "\e[33m[WARN]\e[0m $*"
 }
+
 error() {
     echo -e "\e[31m[ERROR]\e[0m $*" >&2
     exit 1
+}
+
+ask_confirm() {
+    read -r -p "$1 [y/N]: " response
+    case "$response" in
+        [yY][eE][sS]|[yY])
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
 }
 
 if [[ $EUID -eq 0 ]]; then
@@ -20,10 +34,17 @@ fi
 
 log "Starting dotfiles installation..."
 
+if ! ask_confirm "インストール処理を開始してもよろしいですか？"; then
+    log "キャンセルされました。スクリプトを終了します。"
+    exit 0
+fi
+
 STARSHIP_SRC=""
 
-# 必要なパッケージをインストール
-if command -v pacman &> /dev/null; then
+if ask_confirm "パッケージのインストールを開始してもよろしいですか？"; then
+
+    # 必要なパッケージをインストール
+    if command -v pacman &> /dev/null; then
     log "Installing packages using pacman..."
 
     if ! command -v yay &> /dev/null; then
@@ -44,7 +65,7 @@ if command -v pacman &> /dev/null; then
     fi
     STARSHIP_SRC="$HOME/dotfiles/config/starship/starship_arch.toml"
 
-elif command -v apt &> /dev/null; then
+    elif command -v apt &> /dev/null; then
     log "Updating package list..."
     sudo apt update
     source /etc/os-release
@@ -61,7 +82,7 @@ elif command -v apt &> /dev/null; then
         STARSHIP_SRC="$HOME/dotfiles/config/starship/starship_$ID.toml"
     fi
     
-elif command -v dnf &> /dev/null; then
+    elif command -v dnf &> /dev/null; then
     sudo dnf check-update || true
     sudo dnf install epel-release -y
     if [ -f "$HOME/dotfiles/almalinux/packages.txt" ]; then
@@ -90,27 +111,36 @@ elif command -v dnf &> /dev/null; then
         git clone https://github.com/zsh-users/zsh-syntax-highlighting "$ZSH_PLUGIN_DIR/zsh-syntax-highlighting"
     fi
 
-else
+    else
     error "Unsupported package manager."
+    fi
+
+else
+    log "パッケージのインストールはスキップされました。"
 fi
 
+if ask_confirm "シンボリックの処理を開始してもよろしいですか？"; then
 
-# Creating symbolic links for dotfiles
-log "Creating dotfiles symbolic links..."
-mkdir -p "$HOME/.config"
-DOT_FILES=(
-    .bashrc
-    .vimrc
-    .zshrc
-)
-for file in "${DOT_FILES[@]}"; do
-    ln -sfv "$HOME/dotfiles/$file" "$HOME/$file"
-done
+    # Creating symbolic links for dotfiles
+    log "Creating dotfiles symbolic links..."
+    mkdir -p "$HOME/.config"
+    DOT_FILES=(
+        .bashrc
+        .vimrc
+        .zshrc
+    )
+    for file in "${DOT_FILES[@]}"; do
+        ln -sfv "$HOME/dotfiles/$file" "$HOME/$file"
+    done
 
-if [ -f "$STARSHIP_SRC" ]; then
-    ln -sfv "$STARSHIP_SRC" "$HOME/.config/starship.toml"
+    if [ -f "$STARSHIP_SRC" ]; then
+        ln -sfv "$STARSHIP_SRC" "$HOME/.config/starship.toml"
+    else
+        warn "$STARSHIP_SRC not found."
+    fi
+
 else
-    warn "$STARSHIP_SRC not found."
+    log "シンボリックの処理はスキップされました。"
 fi
 
 log "Dotfiles installation complete!"
