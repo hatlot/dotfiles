@@ -8,6 +8,7 @@
 
 ## 対応OS
 
+※CLI環境ではstarshipのフォントが文字化けする可能性があります
 - Arch Linux
 - Debian / Ubuntu
 - AlmaLinux (RedHat系)
