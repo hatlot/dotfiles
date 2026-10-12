@@ -34,14 +34,14 @@ fi
 
 log "Starting dotfiles installation..."
 
-if ! ask_confirm "インストール処理を開始してもよろしいですか？"; then
-    log "キャンセルされました。スクリプトを終了します。"
+if ! ask_confirm "Do you want to proceed with the installation?"; then
+    log "Installation cancelled. Exiting script."
     exit 0
 fi
 
 STARSHIP_SRC=""
 
-if ask_confirm "パッケージのインストールを開始してもよろしいですか？"; then
+if ask_confirm "Do you want to proceed with package installation?"; then
 
     # 必要なパッケージをインストール
     if command -v pacman &> /dev/null; then
@@ -112,20 +112,19 @@ if ask_confirm "パッケージのインストールを開始してもよろし�
     fi
 
     else
-    error "Unsupported package manager."
+        error "Unsupported package manager."
     fi
 
 else
-    log "パッケージのインストールはスキップされました。"
+    log "Package installation skipped."
 fi
 
-if ask_confirm "シンボリックの処理を開始してもよろしいですか？"; then
+if ask_confirm "Do you want to proceed with creating symbolic links?"; then
 
     # Creating symbolic links for dotfiles
     log "Creating dotfiles symbolic links..."
     mkdir -p "$HOME/.config"
     DOT_FILES=(
-        .bashrc
         .vimrc
         .zshrc
     )
@@ -140,7 +139,7 @@ if ask_confirm "シンボリックの処理を開始してもよろしいです�
     fi
 
 else
-    log "シンボリックの処理はスキップされました。"
+    log "Creating symbolic links skipped."
 fi
 
 log "Dotfiles installation complete!"
