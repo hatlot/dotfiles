@@ -1,3 +1,4 @@
+curl
 fastfetch
 zsh
 zsh-autosuggestions

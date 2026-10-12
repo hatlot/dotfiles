@@ -79,6 +79,8 @@ if ask_confirm "Do you want to proceed with package installation?"; then
             if [ -f "$PKG_LIST" ]; then
                 log "Installing packages with yay..."
                 yay -S --needed - < "$PKG_LIST"
+            else
+                warn "$PKG_LIST not found. Skipping package installation."
             fi
             ;;
         debian|ubuntu)
@@ -87,7 +89,9 @@ if ask_confirm "Do you want to proceed with package installation?"; then
             sudo apt update
             if [ -f "$PKG_LIST" ]; then
                 log "Installing packages with apt..."
-                xargs -a "$PKG_LIST" sudo apt install -y
+                xargs -r -a "$PKG_LIST" sudo apt install -y
+            else
+                warn "$PKG_LIST not found. Skipping package installation."
             fi
             if ! command -v starship &> /dev/null; then
                 log "Installing starship..."
@@ -97,11 +101,20 @@ if ask_confirm "Do you want to proceed with package installation?"; then
         almalinux)
             command -v dnf &> /dev/null || error "dnf is not installed"
             log "Updating package list..."
-            sudo dnf check-update || true
+            if sudo dnf check-update; then
+                :
+            else
+                status=$?
+                if [[ $status -ne 100 ]]; then
+                    error "Failed to check for package updates."
+                fi
+            fi
             sudo dnf install epel-release -y
             if [ -f "$PKG_LIST" ]; then
                 log "Installing packages with dnf..."
-                xargs -a "$PKG_LIST" sudo dnf install -y
+                xargs -r -a "$PKG_LIST" sudo dnf install -y
+            else
+                warn "$PKG_LIST not found. Skipping package installation."
             fi
 
             if ! command -v starship &> /dev/null; then
