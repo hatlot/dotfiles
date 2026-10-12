@@ -39,82 +39,87 @@ if ! ask_confirm "Do you want to proceed with the installation?"; then
     exit 0
 fi
 
-STARSHIP_SRC=""
+if [ -f /etc/os-release ]; then
+    source /etc/os-release
+    OS_ID=${ID:-unknown}
+else
+    error "Cannot detect OS. /etc/os-release not found."
+fi
+
+log "Detected OS: $OS_ID"
+
+PKG_LIST="$HOME/dotfiles/$OS_ID/packages.txt"
+STARSHIP_SRC="$HOME/dotfiles/config/starship/starship_$OS_ID.toml"
 
 if ask_confirm "Do you want to proceed with package installation?"; then
+    case "$OS_ID" in
+        arch)
+            command -v pacman &> /dev/null || error "pacman is not installed"
+            log "Installing packages using pacman..."
+            if ! command -v yay &> /dev/null; then
+                sudo pacman -S --needed --noconfirm git base-devel
 
-    # 必要なパッケージをインストール
-    if command -v pacman &> /dev/null; then
-    log "Installing packages using pacman..."
+                log "Installing yay..."
+                TEMP_DIR=$(mktemp -d)
+                trap '[[ -n "${TEMP_DIR:-}" && -d "$TEMP_DIR" ]] && rm -rf -- "$TEMP_DIR"' EXIT
 
-    if ! command -v yay &> /dev/null; then
-        sudo pacman -S --needed --noconfirm git base-devel
+                git clone https://aur.archlinux.org/yay.git "$TEMP_DIR/yay"
+                (cd "$TEMP_DIR/yay" && makepkg -si --noconfirm)
+                log "Yay installation completed."
+            fi
 
-        log "Installing yay..."
-        TEMP_DIR=$(mktemp -d)
-        trap '[[ -n "${TEMP_DIR:-}" && -d "$TEMP_DIR" ]] && rm -rf -- "$TEMP_DIR"' EXIT
+            if [ -f "$PKG_LIST" ]; then
+                log "Installing packages with yay..."
+                yay -S --needed - < "$PKG_LIST"
+            fi
+            ;;
+        debian|ubuntu)
+            command -v apt &> /dev/null || error "apt is not installed"
+            log "Updating package list..."
+            sudo apt update
+            if [ -f "$PKG_LIST" ]; then
+                log "Installing packages with apt..."
+                xargs -a "$PKG_LIST" sudo apt install -y
+            fi
+            if ! command -v starship &> /dev/null; then
+                log "Installing starship..."
+                curl -sS https://starship.rs/install.sh | sh -s -- -y
+            fi
+            ;;
+        almalinux)
+            command -v dnf &> /dev/null || error "dnf is not installed"
+            log "Updating package list..."
+            sudo dnf check-update || true
+            sudo dnf install epel-release -y
+            if [ -f "$PKG_LIST" ]; then
+                log "Installing packages with dnf..."
+                xargs -a "$PKG_LIST" sudo dnf install -y
+            fi
 
-        git clone https://aur.archlinux.org/yay.git "$TEMP_DIR/yay"
-        (cd "$TEMP_DIR/yay" && makepkg -si --noconfirm)
-        log "Yay installation completed."
-    fi
+            if ! command -v starship &> /dev/null; then
+                log "Installing starship..."
+                curl -sS https://starship.rs/install.sh | sh -s -- -y
+            fi
 
-    if [ -f "$HOME/dotfiles/archlinux/packages.txt" ]; then
-        log "Installing packages with yay..."
-        yay -S --needed - < "$HOME/dotfiles/archlinux/packages.txt"
-    fi
-    STARSHIP_SRC="$HOME/dotfiles/config/starship/starship_arch.toml"
+            # Installing Zsh plugins
+            log "Installing Zsh plugins..."
+            ZSH_PLUGIN_DIR="$HOME/.zsh"
+            mkdir -p "$ZSH_PLUGIN_DIR"
 
-    elif command -v apt &> /dev/null; then
-    log "Updating package list..."
-    sudo apt update
-    source /etc/os-release
-    if [[ "$ID" == "debian" || "$ID" == "ubuntu" ]]; then
-        if [ -f "$HOME/dotfiles/$ID/packages.txt" ]; then
-            log "Installing packages with apt..."
-            xargs -a "$HOME/dotfiles/$ID/packages.txt" sudo apt install -y
-        fi
+            if [ ! -d "$ZSH_PLUGIN_DIR/zsh-autosuggestions" ]; then
+                log "Cloning zsh-autosuggestions..."
+                git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_PLUGIN_DIR/zsh-autosuggestions"
+            fi
 
-        if ! command -v starship &> /dev/null; then
-            log "Installing starship..."
-            curl -sS https://starship.rs/install.sh | sh -s -- -y
-        fi
-        STARSHIP_SRC="$HOME/dotfiles/config/starship/starship_$ID.toml"
-    fi
-    
-    elif command -v dnf &> /dev/null; then
-    sudo dnf check-update || true
-    sudo dnf install epel-release -y
-    if [ -f "$HOME/dotfiles/almalinux/packages.txt" ]; then
-        log "Installing packages with dnf..."
-        xargs -a "$HOME/dotfiles/almalinux/packages.txt" sudo dnf install -y
-    fi
-
-    if ! command -v starship &> /dev/null; then
-        log "Installing starship..."
-        curl -sS https://starship.rs/install.sh | sh -s -- -y
-    fi
-    STARSHIP_SRC="$HOME/dotfiles/config/starship/starship_alma.toml"
-
-    # Installing Zsh plugins
-    log "Installing Zsh plugins..."
-    ZSH_PLUGIN_DIR="$HOME/.zsh"
-    mkdir -p "$ZSH_PLUGIN_DIR"
-
-    if [ ! -d "$ZSH_PLUGIN_DIR/zsh-autosuggestions" ]; then
-        log "Cloning zsh-autosuggestions..."
-        git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_PLUGIN_DIR/zsh-autosuggestions"
-    fi
-
-    if [ ! -d "$ZSH_PLUGIN_DIR/zsh-syntax-highlighting" ]; then
-        log "Cloning zsh-syntax-highlighting..."
-        git clone https://github.com/zsh-users/zsh-syntax-highlighting "$ZSH_PLUGIN_DIR/zsh-syntax-highlighting"
-    fi
-
-    else
-        error "Unsupported package manager."
-    fi
-
+            if [ ! -d "$ZSH_PLUGIN_DIR/zsh-syntax-highlighting" ]; then
+                log "Cloning zsh-syntax-highlighting..."
+                git clone https://github.com/zsh-users/zsh-syntax-highlighting "$ZSH_PLUGIN_DIR/zsh-syntax-highlighting"
+            fi
+            ;;
+        *)
+            error "Unsupported OS: $OS_ID"
+            ;;
+    esac
 else
     log "Package installation skipped."
 fi
