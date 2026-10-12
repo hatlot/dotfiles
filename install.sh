@@ -51,6 +51,14 @@ log "Detected OS: $OS_ID"
 PKG_LIST="$HOME/dotfiles/$OS_ID/packages.txt"
 STARSHIP_SRC="$HOME/dotfiles/config/starship/starship_$OS_ID.toml"
 
+case "$OS_ID" in
+    arch|debian|ubuntu|almalinux)
+        ;;
+    *)
+        error "Unsupported OS: $OS_ID"
+        ;;
+esac
+
 if ask_confirm "Do you want to proceed with package installation?"; then
     case "$OS_ID" in
         arch)
