@@ -13,6 +13,11 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 # 大文字・小文字を区別しない
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+# killコマンドの補完を有効化
+zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
+
+setopt auto_cd            # ディレクトリ名だけでcdする
+setopt interactive_comments  # コマンドの途中にコメントを入れられるようにする
 
 # ヒストリー (履歴) 設定
 HISTFILE=~/.zsh_history   # 履歴ファイルの場所
@@ -21,6 +26,7 @@ SAVEHIST=10000            # ファイルに保存する履歴数
 setopt share_history      # 複数のターミナルで履歴を共有
 setopt hist_ignore_dups   # 直前と同じコマンドは記録しない
 setopt hist_ignore_all_dups # 重複する古い履歴を削除
+setopt hist_ignore_space  # 空白で始まるコマンドは履歴に残さない
 
 # オートサジェスト (入力予測)
 # Arch Linuxの場合
