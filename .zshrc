@@ -46,14 +46,11 @@ alias grep='grep --color=auto'
 alias la='ls -a'
 alias ll='ls -la'
 
-if [ -f /etc/arch-release ]; then
-    source ~/dotfiles/archlinux/.aliases
-elif [ -f /etc/ubuntu_advantage ]; then
-    source ~/dotfiles/ubuntu/.aliases
-elif [ -f /etc/debian_version ]; then
-    source ~/dotfiles/debian/.aliases
-elif [ -f /etc/redhat-release ]; then
-    source ~/dotfiles/almalinux/.aliases
+if [ -f /etc/os-release ]; then
+    source /etc/os-release
+    if [ -f "$HOME/dotfiles/$ID/.aliases" ]; then
+        source "$HOME/dotfiles/$ID/.aliases"
+    fi
 fi
 
 # Starshipの起動 (プロンプトの見た目)
