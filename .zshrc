@@ -1,8 +1,5 @@
 # Created by newuser for 5.9
 
-# 日本語環境の設定
-export LANG=ja_JP.UTF-8
-
 # 色を有効にする
 autoload -Uz colors && colors
 
