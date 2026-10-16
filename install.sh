@@ -32,6 +32,22 @@ ask_confirm() {
     esac
 }
 
+link_file() {
+    local src=$1 dst=$2
+    if [[ ! -e $src ]]; then
+        warn "src not found. Skipping."
+        return 0
+    fi
+
+    if [[ -e $dst && ! -L $dst ]]; then
+        local backup
+        backup="$dst.bak.$(date +%Y%m%d%H%M%S)"
+        mv -v -- "$dst" "$backup"
+        log "Backed up $dst to $backup"
+    fi
+    ln -sfv -- "$src" "$dst"
+}
+
 if [[ $EUID -eq 0 ]]; then
     error "This script should not be run as root user."
 fi
@@ -160,15 +176,15 @@ if ask_confirm "Do you want to proceed with creating symbolic links?"; then
         .zshrc
     )
     for file in "${DOT_FILES[@]}"; do
-        if [ -f "$HOME/dotfiles/$file" ]; then
-            ln -sfv "$HOME/dotfiles/$file" "$HOME/$file"
+        if [ -f "$DOTFILES_DIR/$file" ]; then
+            link_file "$DOTFILES_DIR/$file" "$HOME/$file"
         else
-            warn "$HOME/dotfiles/$file not found. Skipping."
+            warn "$DOTFILES_DIR/$file not found. Skipping."
         fi
     done
 
     if [ -f "$STARSHIP_SRC" ]; then
-        ln -sfv "$STARSHIP_SRC" "$HOME/.config/starship.toml"
+        link_file "$STARSHIP_SRC" "$HOME/.config/starship.toml"
     else
         warn "$STARSHIP_SRC not found."
     fi
