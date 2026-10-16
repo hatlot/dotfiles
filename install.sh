@@ -3,6 +3,10 @@
 # Exit script on error
 set -euo pipefail
 
+
+# Get the directory of the current script
+DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 log() {
     echo -e "\e[32m[INFO]\e[0m $*"
 }
@@ -33,6 +37,7 @@ if [[ $EUID -eq 0 ]]; then
 fi
 
 log "Starting dotfiles installation..."
+log "Dotfiles directory: $DOTFILES_DIR"
 
 if ! ask_confirm "Do you want to proceed with the installation?"; then
     log "Installation cancelled. Exiting script."
@@ -48,8 +53,8 @@ fi
 
 log "Detected OS: $OS_ID"
 
-PKG_LIST="$HOME/dotfiles/$OS_ID/packages.txt"
-STARSHIP_SRC="$HOME/dotfiles/config/starship/starship_$OS_ID.toml"
+PKG_LIST="$DOTFILES_DIR/$OS_ID/packages.txt"
+STARSHIP_SRC="$DOTFILES_DIR/config/starship/starship_$OS_ID.toml"
 
 case "$OS_ID" in
     arch|debian|ubuntu|almalinux)
