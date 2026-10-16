@@ -1,5 +1,3 @@
-# Created by newuser for 5.9
-
 # 色を有効にする
 autoload -Uz colors && colors
 
