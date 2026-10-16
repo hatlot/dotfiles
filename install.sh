@@ -3,7 +3,6 @@
 # Exit script on error
 set -euo pipefail
 
-
 # Get the directory of the current script
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
