@@ -155,7 +155,11 @@ if ask_confirm "Do you want to proceed with creating symbolic links?"; then
         .zshrc
     )
     for file in "${DOT_FILES[@]}"; do
-        ln -sfv "$HOME/dotfiles/$file" "$HOME/$file"
+        if [ -f "$HOME/dotfiles/$file" ]; then
+            ln -sfv "$HOME/dotfiles/$file" "$HOME/$file"
+        else
+            warn "$HOME/dotfiles/$file not found. Skipping."
+        fi
     done
 
     if [ -f "$STARSHIP_SRC" ]; then
