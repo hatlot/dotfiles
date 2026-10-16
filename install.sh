@@ -35,7 +35,7 @@ ask_confirm() {
 link_file() {
     local src=$1 dst=$2
     if [[ ! -e $src ]]; then
-        warn "src not found. Skipping."
+        warn "$src not found. Skipping."
         return 0
     fi
 
@@ -176,18 +176,10 @@ if ask_confirm "Do you want to proceed with creating symbolic links?"; then
         .zshrc
     )
     for file in "${DOT_FILES[@]}"; do
-        if [ -f "$DOTFILES_DIR/$file" ]; then
-            link_file "$DOTFILES_DIR/$file" "$HOME/$file"
-        else
-            warn "$DOTFILES_DIR/$file not found. Skipping."
-        fi
+        link_file "$DOTFILES_DIR/$file" "$HOME/$file"
     done
 
-    if [ -f "$STARSHIP_SRC" ]; then
-        link_file "$STARSHIP_SRC" "$HOME/.config/starship.toml"
-    else
-        warn "$STARSHIP_SRC not found."
-    fi
+    link_file "$STARSHIP_SRC" "$HOME/.config/starship.toml"
 
 else
     log "Creating symbolic links skipped."
