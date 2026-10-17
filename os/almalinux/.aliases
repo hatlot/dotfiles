@@ -1,2 +1,4 @@
+# 注意: coreutilsのinstallを隠してしまうため。本物は`command install`か`\install`で使用またはaliasをコメントアウト。
+
 alias update='sudo dnf update'
 alias install='sudo dnf install'
