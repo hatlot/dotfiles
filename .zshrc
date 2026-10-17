@@ -52,7 +52,9 @@ if [ -f ~/.aliases.os ]; then
 fi
 
 # Starshipの起動 (プロンプトの見た目)
-eval "$(starship init zsh)"
+if command -v starship &> /dev/null; then
+    eval "$(starship init zsh)"
+fi
 
 # シンタックスハイライト (コマンドの色付け)
 # Arch Linuxの場合
