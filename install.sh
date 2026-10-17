@@ -68,7 +68,8 @@ fi
 
 log "Detected OS: $OS_ID"
 
-PKG_LIST="$DOTFILES_DIR/$OS_ID/packages.txt"
+OS_DIR="$DOTFILES_DIR/os/$OS_ID"
+PKG_LIST="$OS_DIR/packages.txt"
 STARSHIP_SRC="$DOTFILES_DIR/config/starship/starship_$OS_ID.toml"
 
 case "$OS_ID" in
@@ -178,6 +179,7 @@ if ask_confirm "Do you want to proceed with creating symbolic links?"; then
         link_file "$DOTFILES_DIR/$file" "$HOME/$file"
     done
 
+    link_file "$OS_DIR/.aliases" "$HOME/.aliases.os"
     link_file "$STARSHIP_SRC" "$HOME/.config/starship.toml"
 
 else

@@ -47,11 +47,8 @@ alias grep='grep --color=auto'
 alias la='ls -a'
 alias ll='ls -la'
 
-if [ -f /etc/os-release ]; then
-    source /etc/os-release
-    if [ -f "$HOME/dotfiles/$ID/.aliases" ]; then
-        source "$HOME/dotfiles/$ID/.aliases"
-    fi
+if [ -f ~/.aliases.os ]; then
+    source ~/.aliases.os
 fi
 
 # Starshipの起動 (プロンプトの見た目)
